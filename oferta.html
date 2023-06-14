@@ -88,10 +88,13 @@
             const idadeCell = document.createElement('td');
             const diagCell = document.createElement('td');
             const linkCell = document.createElement('td');
+            // Criação do link "Confirmar" com o valor do campo "oper"
             const link = document.createElement('a');
+            const linkId = 'confirm-link-' + doc.id; // ID único para cada link
             link.href = `dados.html?id=${doc.id}`;
             link.textContent = "Confirmar";
-            link.id = 'confirm-link';
+            //link.textContent = data && data.opers === 1 ? "Oferta já Feita" : "Confirmar";
+            link.id = linkId;
 
             // Usar o e-mail do paciente para identificar a operadora na tabela de usuários
             // const usuario = usuarios.find((usuarios) => usuarios.login === data.email);
@@ -112,6 +115,53 @@
             row.appendChild(linkCell).appendChild(link);
 
             tableBody.appendChild(row);
+
+            // Verifica se o valor de "opers" é igual a 1 para o paciente
+            // Verifica se o valor de 'opers' é igual a 1 para o paciente
+            const ofertasRef = db.collection("pacientes");
+            // Use a função get() para recuperar os dados da coleção "ofertas"
+            ofertasRef.get().then(function (querySnapshot) {
+              querySnapshot.forEach(function (doc) {
+                // Verifique o valor do campo "opers"
+                const data = doc.data();
+                if (data && data.oper === 1) {
+                  // Verifique se o ID do link corresponde ao paciente atual
+                  if (linkId === link.id) {
+                    // Atualize o texto do link para "Oferta já Feita"
+                    link.textContent = "Oferta já Feita";
+                    link.setAttribute("class", "disabled");
+                    link.setAttribute("style", "color: black;");
+                  }
+                }
+              });
+            });
+
+            /* // Use a função get() para recuperar os dados da coleção "ofertas"
+             ofertasRef.get().then(function (querySnapshot) {
+               querySnapshot.forEach(function (doc) {
+                 // Verifique o valor do campo "opers"
+                 const data = doc.data();
+                 if (data && data.opers === 1) {
+                   // Atualize o texto do link para "Oferta já Feita"
+                   link.textContent = "Oferta já Feita";
+ 
+                   link.setAttribute("class", "disabled");
+                   link.setAttribute("style", "color: black;");
+                 }
+               });
+             });*/
+
+
+
+            /*const ofertaRef = db.collection('ofertas').doc(doc.id);
+            ofertaRef.get().then((ofertaDoc) => {
+              if (ofertaDoc.exists && ofertaDoc.data().opers === 1) {
+                link.href = "#";
+                link.textContent = "Oferta já Feita";
+                link.disabled = true;
+              }
+            });*/
+
             // Adicionar evento de clique ao link para exibir o formulário com os dados
             link.addEventListener('click', () => {
               exibirFormulario(data);
@@ -122,14 +172,14 @@
               // Redirecionar para a página do formulário com o ID do paciente como parâmetro
               window.location.href = `dados.html?id=${pacienteId}`;
             }
-           /* const botoesOferta = document.querySelectorAll('#botao');
-            botoesOferta.forEach((botao) => {
-              botao.addEventListener('click', () => {
-                const linkConfirmar = document.getElementById('confirm-link');
-                linkConfirmar.textContent = 'Oferta já Feita';
-                linkConfirmar.disabled = true;
-              });
-            });*/
+            /* const botoesOferta = document.querySelectorAll('#botao');
+             botoesOferta.forEach((botao) => {
+               botao.addEventListener('click', () => {
+                 const linkConfirmar = document.getElementById('confirm-link');
+                 linkConfirmar.textContent = 'Oferta já Feita';
+                 linkConfirmar.disabled = true;
+               });
+             });*/
           });
         }).catch((error) => {
           console.log("Erro ao obter os dados do Cloud Firestore:", error);

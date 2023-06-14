@@ -17,7 +17,7 @@ const ofertaForm = document.getElementById('oferta-form');
 // Obter o ID do paciente da URL
 const urlParams = new URLSearchParams(window.location.search);
 const pacienteId = urlParams.get('id');
-
+const confirmLink = document.getElementById('confirm-link');
 if (!pacienteId) {
     console.log("ID do paciente não fornecido na URL");
 } else {
@@ -77,13 +77,27 @@ function exibirConfirmacao(ofertaData) {
     btnSim.type = 'button';
     btnSim.id = 'botao';
     btnSim.addEventListener('click', () => {
-        const confirmLink = parent.document.getElementById('botao');
-        if (confirmLink) {
-            confirmLink.textContent = 'Oferta já Feita';
-            confirmLink.classList.add('oferta-feita');
-            confirmLink.removeAttribute('href');
-            confirmLink.href = `oferta.html?id=${pacienteId}`; // Replace with the new link URL
-        }
+
+       /* if (confirmLink) {
+            const ofertaRef = db.collection('ofertas').doc(pacienteId);
+            ofertaRef.get().then((ofertaDoc) => {
+                if (ofertaDoc.exists && ofertaDoc.data().opers === 1) {
+                    confirmLink.textContent = "Oferta já Feita";
+                    confirmLink.classList.add("oferta-feita");
+                    confirmLink.disabled = true;
+                    confirmLink.href = ''; // Remova o link para impedir que o usuário clique novamente
+                }
+            });
+        }*/
+
+
+        /*  const confirmLink = parent.document.getElementById('botao');
+          if (confirmLink) {
+              confirmLink.textContent = 'Oferta já Feita';
+              confirmLink.classList.add('oferta-feita');
+              confirmLink.removeAttribute('href');
+              confirmLink.href = `oferta.html?id=${pacienteId}`; // Replace with the new link URL
+          }*/
         salvarOferta(ofertaData);
     });
 
@@ -102,6 +116,8 @@ function exibirConfirmacao(ofertaData) {
     document.body.appendChild(confirmacaoForm);
 }
 
+
+
 //const confirmLink = document.getElementById('btval');
 /*if (confirmLink == null) {
     alert('ta nulo');
@@ -115,7 +131,7 @@ confirmLink.addEventListener('click', (event) => {
     confirmLink.href = '#'; // Remova o link para impedir que o usuário clique novamente
 });*/
 
-const confirmLink = document.getElementById('confirm-link');
+/*const confirmLink = document.getElementById('confirm-link');
 if (confirmLink) {
     confirmLink.href = `oferta.html?id=${pacienteId}`;
     confirmLink.addEventListener('click', (event) => {
@@ -125,7 +141,7 @@ if (confirmLink) {
         confirmLink.textContent = 'Oferta já feita';
         confirmLink.classList.add("oferta-feita");
     });
-}
+}*/
 
 function salvarOferta(ofertaData) {
     db.collection('pacientes').doc(ofertaData.pacienteId).get()
@@ -134,7 +150,8 @@ function salvarOferta(ofertaData) {
                 const pacienteData = doc.data();
                 const ofertaCompleta = {
                     ...ofertaData,
-                    pacientes: pacienteData
+                    pacientes: pacienteData,
+                   // opers: 1 // Atualiza o valor de "oper" para 1
                 };
 
                 db.collection('ofertas').add(ofertaCompleta)
@@ -144,7 +161,15 @@ function salvarOferta(ofertaData) {
 
                         alert('Oferta enviada com sucesso!');
 
-
+                        /*// Verifica se a oferta já foi feita e atualiza o link "Confirmar"
+                        const ofertaRef = db.collection('ofertas').doc(ofertaData.pacienteId);
+                        ofertaRef.get().then((ofertaDoc) => {
+                            if (ofertaDoc.exists && ofertaDoc.data().opers === 1) {
+                                confirmLink.textContent = "Oferta já Feita";
+                                confirmLink.classList.add("oferta-feita");
+                                confirmLink.disabled = true;
+                            }
+                        });*/   
                         // confirmLink.textContent = 'Oferta já feita';
                         // confirmLink.href = '#'; // Remova o link para impedir que o usuário clique novamente
                         window.location.href = 'hospital.html'; // Redireciona para a página principal após o envio
