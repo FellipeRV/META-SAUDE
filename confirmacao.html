@@ -61,14 +61,17 @@
 
     btnSim.addEventListener('click', () => {
       const urlParams = new URLSearchParams(window.location.search);
+      const ofertaId = urlParams.get('id'); // Obter o ID da oferta da URL
       const nome = urlParams.get('nome');
       const email = urlParams.get('email');
       const telefone = urlParams.get('telefone');
       const valor = urlParams.get('valor');
       const periodo = urlParams.get('periodo');
       const obs = urlParams.get('obs');
+      const oper = urlParams.get('oper');
 
-      enviarOferta(nome, email, telefone, valor, periodo, obs)
+      enviarOferta(nome, email, telefone, valor, periodo, obs, oper)
+        
         .then(() => {
           alert('Oferta enviada com sucesso!');
           window.location.href = 'principal.html';
@@ -81,7 +84,7 @@
 
 
 
-    function enviarOferta(nome, email, telefone, valor, periodo, obs) {
+    function enviarOferta(nome, email, telefone, valor, periodo, obs, oper) {
       const recebidoData = {
         nome: nome,
         email: email,
@@ -89,6 +92,7 @@
         valor: valor,
         periodo: periodo,
         obs: obs,
+        oper: 2, // Adicionando o campo "oper" com o valor 2
       };
 
       return db.collection('recebidos').add(recebidoData);

@@ -118,19 +118,21 @@
 
             // Verifica se o valor de "opers" é igual a 1 para o paciente
             // Verifica se o valor de 'opers' é igual a 1 para o paciente
-            const ofertasRef = db.collection("pacientes");
+            
+            const ofertasRef = db.collection("ofertas");
             // Use a função get() para recuperar os dados da coleção "ofertas"
-            ofertasRef.get().then(function (querySnapshot) {
+            ofertasRef.where("pacienteId", "==", doc.id).get().then(function(querySnapshot) {
               querySnapshot.forEach(function (doc) {
                 // Verifique o valor do campo "opers"
                 const data = doc.data();
-                if (data && data.oper === 1) {
+                if (data && data.opers === 1) {
                   // Verifique se o ID do link corresponde ao paciente atual
                   if (linkId === link.id) {
                     // Atualize o texto do link para "Oferta já Feita"
-                    link.textContent = "Oferta já Feita";
+                    //link.textContent = "Oferta já Feita";
                     link.setAttribute("class", "disabled");
                     link.setAttribute("style", "color: black;");
+                    link.innerHTML = "Oferta já Feita";
                   }
                 }
               });
