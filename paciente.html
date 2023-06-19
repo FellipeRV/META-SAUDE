@@ -59,7 +59,7 @@
                 <label for="cpf">CPF:</label>
                 <input placeholder="Digite o CPF do Paciente" id="cpf" type="text" required>
                 <label for="data">Data Nasc:</label>
-                <input id="aniv" placeholder="Digite sua Idade" type="date" required>
+                <input id="aniv" placeholder="Digite sua Idade" pattern="\d{2}\/\d{2}\/\d{4}" type="date" required>
 
             </div>
 
@@ -180,7 +180,15 @@
                 const name = form.name.value;
                 const sexo = form.sexo.value;
                 const cpf = form.cpf.value;
-                const aniv = form.aniv.value;
+                //const aniv = form.aniv.value;
+                const aniv = formatDate(form.aniv.value);
+                function formatDate(dateString) {
+                    const dateParts = dateString.split('-');
+                    const day = dateParts[2];
+                    const month = dateParts[1];
+                    const year = dateParts[0];
+                    return `${day}/${month}/${year}`;
+                }
                 const carteira = form.carteira.value;
                 const mae = form.mae.value;
                 const end = form.end.value;
